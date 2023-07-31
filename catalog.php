@@ -13,28 +13,34 @@
 </head>
 <body>
     <?php
-    session_start();
-    if(!isset($_SESSION["tel"]))
-      $_SESSION["tel"] = $_POST["tel"];
-    if(!isset($_SESSION["id"]))
-      $_SESSION["id"] = array();  
-    $idArr = array();
+      session_start();
+      if(!isset($_SESSION["tel"]))
+        $_SESSION["tel"] = $_POST["tel"];
+      if(!isset($_SESSION["id"]))
+        $_SESSION["id"] = array();  
 
-    $filename = "product.txt";
-    $product = file($filename);
+      $idArr = array();
+      $id = array();
+      $name = array();
+      $price = array();
+      $img = array();
+      
+
+      $link = @mysqli_connect( 
+        'localhost',  // MySQL主機名稱 
+        'root',       // 使用者名稱 
+        '',            // 密碼
+        'shoppingwithfile');
     
-    $id = array();
-    $name = array();
-    $price = array();
-    $img = array();
+      $sql = "SELECT * FROM `product`";
+      $result=mysqli_query($link, $sql);
+      while($row = mysqli_fetch_assoc($result)){
+        $id[] = $row["id"];
+        $name[] = $row["name"];
+        $price[] = $row["price"];
+        $img[] = $row["pic"];
+      }
 
-   foreach($product as $line){
-      $productArr = explode(",",$line);
-      $id[] = $productArr[0];
-      $name[] = $productArr[1];
-      $price[] = $productArr[2];
-      $img[] = $productArr[3];
-    }
     ?>
 
     <h1 style=text-align:center>商品目錄</h1>
@@ -60,6 +66,7 @@
         </td>
         </tr>";
     }
+    mysqli_close($link);
     ?>
     <tr>
       <td align=center colspan=2>
@@ -70,5 +77,6 @@
     </tr>
     </table>
 
+    
 </body>
 </html>

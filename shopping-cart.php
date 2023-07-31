@@ -13,25 +13,30 @@
 </head>
 <body>
     <?php
-    session_start();
-    $filename = "product.txt";
-    $product = file($filename);
-    $pId = $_SESSION["id"];
-    
-    
-    $id = array();
-    $name = array();
-    $price = array();
-    $img = array();
-    $total = 0;
+      session_start();
+      $pId = $_SESSION["id"];
+      $id = array();
+      $name = array();
+      $price = array();
+      $img = array();
+      $total = 0;
 
-   foreach($product as $line){
-      $productArr = explode(",",$line);
-      $id[] = $productArr[0];
-      $name[] = $productArr[1];
-      $price[] = $productArr[2];
-      $img[] = $productArr[3];
-    }
+      $link = @mysqli_connect( 
+        'localhost',  // MySQL主機名稱 
+        'root',       // 使用者名稱 
+        '',            // 密碼
+        'shoppingwithfile');
+    
+      $sql = "SELECT * FROM `product`";
+      $result=mysqli_query($link, $sql);
+      while($row = mysqli_fetch_assoc($result)){
+        $id[] = $row["id"];
+        $name[] = $row["name"];
+        $price[] = $row["price"];
+        $img[] = $row["pic"];
+      }
+      mysqli_close($link);
+
     ?>
 
     <h1 style=text-align:center>感謝您的購買，商品清單如下:</h1>
